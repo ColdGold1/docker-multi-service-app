@@ -21,6 +21,4 @@ after_success:
   - docker push coldgold1/multi-server
   - docker push coldgold1/multi-nginx
   - docker push coldgold1/multi-worker 
-  
-  
   # Take those images and push them to docker hub
