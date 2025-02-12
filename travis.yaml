@@ -1,0 +1,24 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t coldgold1/react-test -f ./client/Dockerfile.dev ./client
+
+#test_running_section
+script:
+  - docker run coldgold1/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t coldgold1/multi-client ./client
+  - docker build -t coldgold1/multi-server ./server
+  - docker build -t coldgold1/multi-nginx ./nginx
+  - docker build -t coldgold1/multi-worker ./worker
+  
+  # Log in to the docker CLI
+  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push coldgold1/multi-client
+  - docker push coldgold1/multi-server
+  - docker push coldgold1/multi-nginx
+  - docker push coldgold1/multi-worker 
+  # Take those images and push them to docker hub
